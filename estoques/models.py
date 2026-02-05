@@ -6,6 +6,7 @@ from usuarios.models import Empresa, Usuario
 from produtos.models import Produto
 
 class Estoque(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name="estoques")
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name="estoques")
     quantidade = models.PositiveIntegerField(default=0)
@@ -18,6 +19,7 @@ class Estoque(models.Model):
 
 
 class LogRetirada(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="retiradas")
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name="retiradas")
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name="retiradas")
@@ -30,6 +32,7 @@ class LogRetirada(models.Model):
 
 
 class LogEntrada(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name="entradas")
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name="entradas")
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE, related_name="entradas")

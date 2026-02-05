@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from fornecedores.models import Fornecedor
 class Produto(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     fornecedor = models.ForeignKey(Fornecedor, on_delete=models.CASCADE, related_name="produtos")
     nome = models.CharField(max_length=150)
     preco = models.DecimalField(max_digits=10, decimal_places=2)

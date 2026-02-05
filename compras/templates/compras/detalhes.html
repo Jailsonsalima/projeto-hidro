@@ -100,7 +100,7 @@
           </tr>
         </tbody>
       </table>
-      {% if lista.status != "CONSOLIDADA" and lista.status != "RECEBIDA" and lista.status != "EM_ENTREGA" and lista.status != "EM_PROCESSO_COMPRA" %}
+      {% if lista.status != "CONSOLIDADA" and lista.status != "RECEBIDA" and lista.status != "EM_ENTREGA" and lista.status != "EM_PROCESSO_COMPRA" and lista.status != "AUTORIZADA" %}
         <h3>Adicionar Produtos</h3>
         {% for fornecedor in fornecedores %}
           <h4>{{ fornecedor.nome }} (CNPJ: {{ fornecedor.cnpj }})</h4>

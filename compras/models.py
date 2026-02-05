@@ -17,7 +17,7 @@ class ListaCompra(models.Model):
         ('EM_ENTREGA', 'Em Rota de Entrega'),
         ('RECEBIDA', 'Itens Recebidos'),
     ]
-
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     numero = models.CharField(max_length=20, unique=False)  # Ex: 00001/2025
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name="listas_compra")
     status = models.CharField(max_length=30, choices=STATUS, default='EM_CRIACAO')
@@ -34,6 +34,7 @@ class ListaCompra(models.Model):
 
 
 class ItemListaCompra(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     lista = models.ForeignKey(ListaCompra, on_delete=models.CASCADE, related_name="itens")
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     quantidade_desejada = models.PositiveIntegerField(default=0)
@@ -45,6 +46,7 @@ class ItemListaCompra(models.Model):
 
 
 class LogAlteracaoLista(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     lista = models.ForeignKey(ListaCompra, on_delete=models.CASCADE, related_name="alteracoes")
     produto = models.ForeignKey(Produto, on_delete=models.CASCADE)
     alterado_por = models.ForeignKey(Usuario, on_delete=models.CASCADE)

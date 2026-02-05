@@ -6,5 +6,5 @@ from .models import Empresa
 
 @admin.register(Empresa)
 class EmpresaAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'email', 'telefone')
+    list_display = ('id','nome', 'email', 'telefone', 'endereco')
     search_fields = ('nome', 'email')

@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class Empresa(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     nome = models.CharField(max_length=150)
     endereco = models.CharField(max_length=255)
     email = models.EmailField()

@@ -4,6 +4,7 @@ from django.db import models
 from django.db import models
 
 class Fornecedor(models.Model):
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     nome = models.CharField(max_length=150)
     cnpj = models.CharField(max_length=20, unique=True)
     email = models.EmailField()

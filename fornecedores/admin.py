@@ -6,6 +6,6 @@ from .models import Fornecedor
 
 @admin.register(Fornecedor)
 class FornecedorAdmin(admin.ModelAdmin):
-    list_display = ('nome', 'cnpj', 'email', 'telefone')
+    list_display = ('id', 'nome', 'cnpj', 'email', 'telefone', 'site', 'endereco')
     search_fields = ('nome', 'cnpj')
 
