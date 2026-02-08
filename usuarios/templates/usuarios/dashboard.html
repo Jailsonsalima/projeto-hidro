@@ -12,6 +12,9 @@
       <a href="{% url 'lista_usuarios' %}" class="btn">Usuários</a>
       <a href="{% url 'lista_fornecedores' %}" class="btn">Fornecedores</a>
       <a href="{% url 'lista_produtos' %}" class="btn">Produtos</a>
+
+    <a href="{% url 'dashboard_financas' %}" class="btn">Finanças</a>
+
     {% endif %}
     {% if user.tipo_usuario != 'FUNCIONARIO' %}
       <a href="{% url 'lista_estoques' %}" class="btn">Estoques</a>

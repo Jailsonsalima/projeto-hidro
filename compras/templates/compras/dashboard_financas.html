@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Resumo Financeiro</h2>
+<div class="resumo">
+    <p><strong>Total Geral:</strong> R$ {{ total_geral|floatformat:2 }}</p>
+    <p><strong>Total Pago:</strong> R$ {{ total_pago|floatformat:2 }}</p>
+    <p><strong>Total Pendente:</strong> R$ {{ total_pendente|floatformat:2 }}</p>
+</div>
+
+<hr>
+
+<h2>Parcelas Financeiras</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Lista</th>
+            <th>Parcela</th>
+            <th>Valor</th>
+            <th>Data de Vencimento</th>
+            <th>Status</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for parcela in parcelas %}
+        <tr>
+            <td>{{ parcela.lista.numero }}</td>
+            <td>{{ parcela.numero_parcela }}</td>
+            <td>R$ {{ parcela.valor|floatformat:2 }}</td>
+            <td>{{ parcela.data_vencimento|date:"d/m/Y" }}</td>
+            <td>{{ parcela.get_status_display }}</td>
+            <td>
+                {% if parcela.status == "PENDENTE" %}
+                <form method="post" action="{% url 'pagar_parcela' parcela.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Marcar como Paga</button>
+                </form>
+                {% else %}
+                <span class="ok">Pago em {{ parcela.data_pagamento|date:"d/m/Y" }}</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

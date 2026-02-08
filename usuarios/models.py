@@ -16,11 +16,12 @@ class Usuario(AbstractUser):
         ('FUNCIONARIO', 'Funcionário'),
     ]
     
+
+    id = models.BigAutoField(primary_key=True, verbose_name="ID")
+    username = models.CharField(max_length=150, unique=True, verbose_name='username')
     password = models.CharField(max_length=128, verbose_name='password')
     email = models.EmailField(blank=True, max_length=254, verbose_name='email address')
     
-
-    id = models.BigAutoField(primary_key=True, verbose_name="ID")
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, null=True, blank=True)
     tipo_usuario = models.CharField(max_length=20, choices=TIPOS_USUARIO, null=True, blank=True)
     status_ativo = models.BooleanField(default=False)

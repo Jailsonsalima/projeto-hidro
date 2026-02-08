@@ -38,6 +38,12 @@
       {% endif %}
     {% elif lista.status == "EM_PROCESSO_CONSOLIDACAO" %}
       {% if request.user.tipo_usuario == "GERENTE_MATRIZ" %}
+        <label for="parcelas">Número de parcelas:</label>
+    <input type="number" name="parcelas" min="1" required>
+
+    <label for="data_vencimento">Data do primeiro vencimento:</label>
+    <input type="date" name="data_vencimento" required>
+
         <button type="submit" name="CONSOLIDADA" class="btn">Consolidar</button>
       {% endif %}
     {% elif lista.status == "CONSOLIDADA" %}

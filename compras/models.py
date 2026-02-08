@@ -56,3 +56,17 @@ class LogAlteracaoLista(models.Model):
 
     def __str__(self):
         return f"Alteração {self.produto.nome}: {self.quantidade_antiga} → {self.quantidade_nova}"
+
+class ParcelaFinanceira(models.Model):
+    lista = models.ForeignKey(ListaCompra, on_delete=models.CASCADE, related_name="parcelas")
+    numero_parcela = models.PositiveIntegerField()
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    data_vencimento = models.DateField()
+    status = models.CharField(
+        max_length=20,
+        choices=[("PENDENTE", "Pendente"), ("PAGA", "Paga")],
+        default="PENDENTE"
+    )
+    data_pagamento = models.DateField(null=True, blank=True)
+    def __str__(self):
+        return f"Parcela {self.numero_parcela} - {self.lista.numero}"

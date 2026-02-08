@@ -6,12 +6,12 @@ from django.utils import timezone
 from django.db import transaction
 from django.db.models import Sum
 
-from .models import ListaCompra, ItemListaCompra, LogAlteracaoLista
+from .models import ListaCompra, ItemListaCompra, LogAlteracaoLista, ParcelaFinanceira
 from produtos.models import Produto
 from fornecedores.models import Fornecedor
 from estoques.models import Estoque, LogEntrada, LogRetirada
 
-
+from datetime import datetime, timedelta, date
 # -------------------------------
 # Funções utilitárias
 # -------------------------------
@@ -213,10 +213,30 @@ def detalhes_lista(request, id):
             if request.user.tipo_usuario != "GERENTE_MATRIZ":
                 messages.error(request, "Você não tem permissão para consolidar compras.")
                 return redirect("lista_compras")
+            parcelas = int(request.POST.get("parcelas"))
+            data_vencimento = request.POST.get("data_vencimento")
+            # Calcula valor total da lista
+            total_lista = sum(item.quantidade_desejada * (item.preco_unitario or item.produto.preco) for item in itens)
+            valor_parcela = total_lista / parcelas
+
+            # Cria parcelas
+            
+            data_base = datetime.strptime(data_vencimento, "%Y-%m-%d").date()
+
+            for i in range(parcelas):
+                vencimento = data_base + timedelta(days=30*i)  # cada mês
+                ParcelaFinanceira.objects.create(
+                    lista=lista,
+                    numero_parcela=i+1,
+                    valor=valor_parcela,
+                    data_vencimento=vencimento
+                )
+
+
             lista.status = "CONSOLIDADA"
             lista.save()
             lista.listas_unidas.update(status="CONSOLIDADA")
-            messages.success(request, "Lista consolidada com sucesso!")
+            messages.success(request, "Lista consolidada e parcelas geradas com sucesso!")
             return redirect("lista_compras")
 
         # Processar compra
@@ -478,3 +498,34 @@ def enviar_lista(request):
 
     messages.success(request, f"Lista {lista.numero} enviada para entrega.")
     return redirect("lista_compras")
+
+@login_required
+def dashboard_financas(request):
+    parcelas = ParcelaFinanceira.objects.all().order_by("data_vencimento")
+
+    total_pago = sum(p.valor for p in parcelas if p.status == "PAGA")
+    total_pendente = sum(p.valor for p in parcelas if p.status == "PENDENTE")
+    total_geral = total_pago + total_pendente
+
+    contexto = {
+        "parcelas": parcelas,
+        "total_pago": total_pago,
+        "total_pendente": total_pendente,
+        "total_geral": total_geral,
+        "header_title": "Dashboard Financeiro"
+    }
+    return render(request, "compras/dashboard_financas.html", contexto)
+
+
+@login_required
+def pagar_parcela(request, id):
+    parcela = get_object_or_404(ParcelaFinanceira, id=id)
+
+    if request.method == "POST":
+        parcela.status = "PAGA"
+        parcela.data_pagamento = date.today()
+        parcela.save()
+        messages.success(request, f"Parcela {parcela.numero_parcela} da lista {parcela.lista.numero} marcada como paga.")
+        return redirect("dashboard_financas")
+
+    return redirect("dashboard_financas")
